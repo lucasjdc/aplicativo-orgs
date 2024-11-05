@@ -1,6 +1,7 @@
 package br.com.alura.orgs.dao
 
 import br.com.alura.orgs.model.Produto
+import java.math.BigDecimal
 
 class ProdutosDao {
 
@@ -8,12 +9,17 @@ class ProdutosDao {
         produtos.add(produto)
     }
 
-    fun buscaTodos() : List<Produto> {
+    fun buscaTodos(): List<Produto> {
         return produtos.toList()
     }
 
     companion object {
-        // Data Access Object - DAO
-        private val produtos = mutableListOf<Produto>()
+        private val produtos = mutableListOf<Produto>(
+            Produto(
+                nome = "Cesta de frutas",
+                descricao = "Laranja, manga e abacaxi",
+                valor = BigDecimal("19.83")
+            )
+        )
     }
 }
