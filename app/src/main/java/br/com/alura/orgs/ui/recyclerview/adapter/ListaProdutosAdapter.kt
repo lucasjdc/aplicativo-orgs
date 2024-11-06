@@ -1,11 +1,17 @@
 package br.com.alura.orgs.ui.recyclerview.adapter
 
 import android.content.Context
+import android.icu.text.NumberFormat
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import br.com.alura.orgs.databinding.ProdutoItemBinding
 import br.com.alura.orgs.model.Produto
+import java.math.BigDecimal
+
+import java.util.Locale
 
 class ListaProdutosAdapter(
         private val context: Context,
@@ -16,13 +22,22 @@ class ListaProdutosAdapter(
 
     class ViewHolder(private val binding: ProdutoItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
+        @RequiresApi(Build.VERSION_CODES.N)
         fun vincula(produto: Produto) {
             val nome = binding.produtoItemNome
             nome.text = produto.nome
             val descricao = binding.produtoItemDescricao
             descricao.text = produto.descricao
             val valor = binding.produtoItemValor
-            valor.text = produto.valor.toPlainString()
+            val valorEmMoeda: String = formataParaMoedaBrasileira(produto.valor)
+            valor.text = valorEmMoeda
+        }
+
+        @RequiresApi(Build.VERSION_CODES.N)
+        private fun formataParaMoedaBrasileira(valor: BigDecimal): String {
+            val formatador: NumberFormat = NumberFormat
+                .getCurrencyInstance(Locale("pt", "br"))
+            return formatador.format(valor)
         }
     }
 
@@ -32,6 +47,7 @@ class ListaProdutosAdapter(
         return ViewHolder(binding)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val produto = produtos[position]
         holder.vincula(produto)
